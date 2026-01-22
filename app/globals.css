@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+body {
+  font-family: var(--font-be-vietnam), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.form-label {
+  @apply block text-sm text-slate-600 mb-1;
+}
+
+.form-input {
+  @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm
+         focus:outline-none focus:border-blue-500
+         focus:ring-2 focus:ring-blue-500/20 transition;
+}
