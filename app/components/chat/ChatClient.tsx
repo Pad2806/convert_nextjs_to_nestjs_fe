@@ -7,6 +7,7 @@ import { Service } from "@/app/lib/supabase/types/service";
 import { useRouter } from "next/navigation";
 import { generateSepayQR } from "@/app/lib/payment/sepayqr";
 import { X } from "lucide-react";
+import { API_URL } from "@/app/lib/api";
 
 type SlotStat = {
   time: string;
@@ -84,7 +85,7 @@ export default function ChatClient() {
 
     const timer = setInterval(async () => {
       try {
-        const res = await fetch(`/api/bookings/${paymentBookingId}`);
+        const res = await fetch(`${API_URL}/bookings/${paymentBookingId}`);
         const data = await res.json();
         
         if (data.created_at && !paymentCreatedAt) {
@@ -172,7 +173,7 @@ export default function ChatClient() {
   };
 
   const createBookingViaApi = async (bookingTime: string) => {
-    const res = await fetch("/api/bookings", {
+    const res = await fetch(`${API_URL}/bookings`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -283,7 +284,7 @@ export default function ChatClient() {
         }
 
         try {
-          const res = await fetch("/api/bookings/validate", {
+          const res = await fetch(`${API_URL}/bookings/validate`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -368,7 +369,7 @@ export default function ChatClient() {
   useEffect(() => {
     if (step === 'date' && tempDay && form.clinic && form.service) {
         setSlots([]);
-        fetch(`/api/available-slots?clinic_id=${form.clinic}&service_id=${form.service}&date=${tempDay}`)
+        fetch(`${API_URL}/bookings/available-slots?clinic_id=${form.clinic}&service_id=${form.service}&date=${tempDay}`)
             .then(r => r.json())
             .then((data: SlotStat[]) => {
                  let s = data;
@@ -404,7 +405,7 @@ export default function ChatClient() {
       
       // Validate
        try {
-          const res = await fetch("/api/bookings/validate", {
+          const res = await fetch(`${API_URL}/bookings/validate`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -713,7 +714,7 @@ export default function ChatClient() {
                 <button 
                     onClick={async () => {
                         if (paymentBookingId) {
-                            await fetch(`/api/bookings/${paymentBookingId}`, {
+                            await fetch(`${API_URL}/bookings/${paymentBookingId}`, {
                                 method: 'PATCH',
                                 body: JSON.stringify({ status: 'expired' })
                             });
@@ -801,7 +802,9 @@ function PaymentCountdown({ createdAt }: { createdAt: string }) {
     return () => clearInterval(timer);
   }, [createdAt]);
 
-  if (!timeLeft) return null;
-  
-  return <div className="text-center mt-2 animate-in fade-in slide-in-from-top-1"><span className="text-sm font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full border border-orange-100 shadow-sm">Thanh toán trong: {timeLeft}</span></div>;
+  return (
+    <div className="text-orange-600 font-mono text-xl font-bold rounded-lg bg-orange-50 py-2">
+       {timeLeft}
+    </div>
+  );
 }

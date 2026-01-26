@@ -2,6 +2,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { API_URL } from "@/app/lib/api";
 
 export default function ResultClient() {
   const params = useSearchParams();
@@ -14,7 +15,7 @@ export default function ResultClient() {
   useEffect(() => {
     if (!bookingId) return;
 
-    fetch(`/api/bookings/${bookingId}`, { cache: "no-store" })
+    fetch(`${API_URL}/bookings/${bookingId}`, { cache: "no-store" })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         setBooking(data);

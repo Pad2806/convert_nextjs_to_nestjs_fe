@@ -17,6 +17,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { generateSepayQR } from "@/app/lib/payment/sepayqr";
+import { API_URL } from "@/app/lib/api";
 
 interface Option {
   id: string;
@@ -85,7 +86,7 @@ export default function BookingForm() {
 
     const interval = setInterval(async () => {
       try {
-        const res = await fetch(`/api/bookings/${paymentBookingId}`);
+        const res = await fetch(`${API_URL}/bookings/${paymentBookingId}`);
         const data = await res.json();
         
         if (data.created_at && !paymentCreatedAt) {
@@ -109,8 +110,8 @@ export default function BookingForm() {
 
   useEffect(() => {
     Promise.all([
-      fetch("/api/clinics").then((r) => r.json()),
-      fetch("/api/services").then((r) => r.json()),
+      fetch(`${API_URL}/clinics`).then((r) => r.json()),
+      fetch(`${API_URL}/services`).then((r) => r.json()),
     ]).then(([c, s]) => {
       setClinics(c);
       setServices(s);
@@ -126,7 +127,7 @@ export default function BookingForm() {
 
     setHasCheckedSlots(false);
     fetch(
-      `/api/available-slots?clinic_id=${form.clinic}&service_id=${form.service}&date=${form.appointmentDate}`,
+      `${API_URL}/bookings/available-slots?clinic_id=${form.clinic}&service_id=${form.service}&date=${form.appointmentDate}`,
       { cache: "no-store" }
     )
       .then((r) => r.json())
@@ -145,6 +146,7 @@ export default function BookingForm() {
         setHasCheckedSlots(true);
       });
   }, [form.clinic, form.service, form.appointmentDate]);
+
 
   // Helper to determine active date tab
   const getSelectedDateTab = () => {

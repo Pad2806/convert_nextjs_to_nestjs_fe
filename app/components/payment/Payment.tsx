@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePayment } from "./usePayment";
 import { generateSepayQR } from "@/app/lib/payment/sepayqr";
+import { API_URL } from "@/app/lib/api";
 
 type BookingResponse = {
   id: string;
@@ -20,7 +21,7 @@ export default function PaymentClient() {
   useEffect(() => {
     if (!bookingId) return;
 
-    fetch(`/api/bookings/${bookingId}`, { cache: "no-store" })
+    fetch(`${API_URL}/bookings/${bookingId}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         if (data?.id) {
@@ -33,7 +34,7 @@ export default function PaymentClient() {
     if (!bookingId) return;
 
     const timer = setInterval(async () => {
-      const res = await fetch(`/api/bookings/${bookingId}`, {
+      const res = await fetch(`${API_URL}/bookings/${bookingId}`, {
         cache: "no-store",
       });
       const data = await res.json();

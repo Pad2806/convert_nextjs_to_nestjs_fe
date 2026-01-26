@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { API_URL } from "@/app/lib/api";
 
 export interface BookingFormState {
   name: string;
@@ -71,7 +72,6 @@ export function useBookingForm() {
     if (!form.clinic) e.clinic = "Chọn phòng khám";
     if (!form.service) e.service = "Chọn dịch vụ";
 
-    // Only validate date/time if clinic and service are selected (since the UI blocks them otherwise)
     if (form.clinic && form.service) {
       if (!form.appointmentDate) e.appointmentDate = "Chọn ngày";
       if (!form.appointmentTime) e.appointmentTime = "Chọn giờ";
@@ -88,18 +88,15 @@ export function useBookingForm() {
   }
 
   async function validateBookingAvailability(): Promise<boolean> {
-    // 1. Get local validation errors
     const e = getValidationErrors();
-    const isLocalValid = Object.keys(e).length === 0;
 
-    // 2. Check if we should call the server to check duplications
-    // We proceed if phone format is valid, even if other fields have errors
+    // Check phone format first
     const isPhoneValidFormat = !(e as any).phone;
 
     if (isPhoneValidFormat && form.appointmentDate) {
       setIsSubmitting(true);
       try {
-        const res = await fetch("/api/bookings/validate", {
+        const res = await fetch(`${API_URL}/bookings/validate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -118,24 +115,16 @@ export function useBookingForm() {
         }
       } catch (err: any) {
         console.error(err);
-        // Don't alert here to avoid spamming if user just has missing name
-        // But if it's a real network error, maybe? 
-        // For now, implicit fail or just log.
       } finally {
         setIsSubmitting(false);
       }
     }
 
-    // 3. Set all errors (local + server)
     setErrors(e);
-
-    // 4. Return true only if NO errors at all
     return Object.keys(e).length === 0;
   }
 
   async function submit() {
-    // We can skip validateForm() here if we assume it was called before, 
-    // but keeping it is safer.
     if (!validateForm()) return;
 
     setIsSubmitting(true);
@@ -143,7 +132,7 @@ export function useBookingForm() {
     try {
       const booking_time = `${form.appointmentDate}T${form.appointmentTime}:00`;
 
-      const res = await fetch("/api/bookings", {
+      const res = await fetch(`${API_URL}/bookings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
