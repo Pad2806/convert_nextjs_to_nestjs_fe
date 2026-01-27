@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   frontend:
-    image: ghcr.io/Pad2806/convert_nextjs_to_nestjs_fe:latest
+    image: ghcr.io/pad2806/convert_nextjs_to_nestjs_fe:latest
     container_name: frontend_prod
     restart: always
     ports:
