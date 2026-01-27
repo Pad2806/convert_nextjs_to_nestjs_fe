@@ -15,7 +15,7 @@ COPY . .
 # Environment variables phải được set lúc build nếu dùng NEXT_PUBLIC_
 # Tuy nhiên với Docker, ta thường build generic và inject env lúc run time (nâng cao).
 # Để đơn giản, disable telemetry
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # Stage 3: Production image
