@@ -2,7 +2,7 @@ name: Deploy Backend
 
 on:
   push:
-    branches: ["main"]
+    branches: ["feat/booking_module"]
 
 env:
   REGISTRY: ghcr.io
