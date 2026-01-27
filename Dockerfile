@@ -16,6 +16,9 @@ COPY . .
 # Tuy nhiên với Docker, ta thường build generic và inject env lúc run time (nâng cao).
 # Để đơn giản, disable telemetry
 ENV NEXT_TELEMETRY_DISABLED=1
+
+ENV NEXT_PUBLIC_API_URL=http://localhost:3000
+
 RUN npm run build
 
 # Stage 3: Production image
@@ -23,7 +26,7 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
