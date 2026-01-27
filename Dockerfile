@@ -19,6 +19,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 ENV NEXT_PUBLIC_API_URL=http://localhost:3000
 
+ENV NEXT_PUBLIC_SUPABASE_URL=https://mock-project.supabase.co
+ENV SUPABASE_SERVICE_ROLE_KEY=mock-key-for-build
+ENV SUPABASE_URL=https://mock-project.supabase.co
+
 RUN npm run build
 
 # Stage 3: Production image
